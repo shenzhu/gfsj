@@ -21,7 +21,7 @@ import java.util.Optional;
 public class FileChunkManager {
   private final Logger logger = LoggerFactory.getLogger(getClass());
 
-  private final String DB_LOCATION = "D:\\playground\\gfsj\\disk";
+  public final String DB_LOCATION = "D:\\playground\\gfsj\\disk";
 
   // Status for chunk creation
   enum ChunkCreationStatus {
@@ -369,15 +369,15 @@ public class FileChunkManager {
    * Get the version of given chunk.
    *
    * @param chunkHandle chunk handle
-   * @return version
+   * @return Optional of version
    */
-  public int getChunkVersion(String chunkHandle) {
+  public Optional<Integer> getChunkVersion(String chunkHandle) {
     Optional<ChunkServerOuterClass.FileChunk> result = getFileChunk(chunkHandle);
     if (result.isEmpty()) {
-      return -1;
+      return Optional.empty();
     }
 
-    return result.get().getVersion();
+    return Optional.of(result.get().getVersion());
   }
 
   /** Close RocksDB. */

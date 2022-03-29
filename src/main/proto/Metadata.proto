@@ -4,7 +4,7 @@ option java_package = "org.shenzhu.grpcj.protos";
 
 package protos;
 
-import "chunk_server.proto";
+import "ChunkServer.proto";
 
 // Metadata of a given file. The reason that we define the file metadata in proto is
 // that later we will use the protobuf to serialize / deserialize this data to
