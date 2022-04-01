@@ -130,7 +130,7 @@ public class ChunkServerLeaseServiceImplTest {
   }
 
   @Test
-  public void testRevokeLEaseValidRequest() {
+  public void testRevokeLeaseValidRequest() {
     ChunkServerLeaseServiceOuterClass.RevokeLeaseRequest request =
         makeValidRevokeLeaseRequestBuilder()
             .setChunkHandle(testRevokeLeaseChunkHandleRevokable)
@@ -140,5 +140,31 @@ public class ChunkServerLeaseServiceImplTest {
     assertSame(
         reply.getStatus(),
         ChunkServerLeaseServiceOuterClass.RevokeLeaseReply.RevokeLeaseStatus.REVOKED);
+  }
+
+  @Test
+  public void testLeaseNewerLeaseAlreadyExists() {
+    ChunkServerLeaseServiceOuterClass.RevokeLeaseRequest request =
+        makeValidRevokeLeaseRequestBuilder()
+            .setOriginalLeaseExpirationTime(
+                Timestamp.newBuilder().setSeconds(testExpirationUnixSeconds - 1000))
+            .build();
+
+    ChunkServerLeaseServiceOuterClass.RevokeLeaseReply reply = blockingStub.revokeLease(request);
+    assertSame(
+        reply.getStatus(),
+        ChunkServerLeaseServiceOuterClass.RevokeLeaseReply.RevokeLeaseStatus
+            .IGNORED_HAS_NEWER_LEASE);
+  }
+
+  @Test
+  public void testRevokeLeaseNoChunkHandle() {
+    ChunkServerLeaseServiceOuterClass.RevokeLeaseRequest request =
+        makeValidRevokeLeaseRequestBuilder().setChunkHandle("no-handle").build();
+
+    ChunkServerLeaseServiceOuterClass.RevokeLeaseReply reply = blockingStub.revokeLease(request);
+    assertSame(
+        reply.getStatus(),
+        ChunkServerLeaseServiceOuterClass.RevokeLeaseReply.RevokeLeaseStatus.REJECTED_NOT_FOUND);
   }
 }
