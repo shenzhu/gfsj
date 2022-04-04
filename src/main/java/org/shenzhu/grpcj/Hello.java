@@ -4,8 +4,6 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
-import org.shenzhu.grpcj.client.ChunkServerControlServiceClient;
-import org.shenzhu.grpcj.protos.ChunkServerControlServiceOuterClass;
 import org.shenzhu.grpcj.server.chunkserver.ChunkServerControlServiceImpl;
 import org.shenzhu.grpcj.server.chunkserver.ChunkServerFileServiceImpl;
 import org.shenzhu.grpcj.server.chunkserver.ChunkServerImpl;
@@ -71,20 +69,20 @@ public class Hello {
   public static void main(String[] args) throws Exception {
     System.out.println("hello world");
 
-    final TestChunkServer testChunkServer = new TestChunkServer();
-    testChunkServer.start();
+    String filepath = "\\foo\\bar\\baz";
 
-    Thread.sleep(2000);
+    System.out.println(filepath);
+    System.out.println(filepath.indexOf("x", 3));
 
-    ManagedChannel channel =
-        ManagedChannelBuilder.forTarget("localhost:50051").usePlaintext().build();
-    ChunkServerControlServiceClient client = new ChunkServerControlServiceClient(channel);
-    ChunkServerControlServiceOuterClass.CheckHeartBeatReply reply =
-        client.checkHeartBeat(
-            ChunkServerControlServiceOuterClass.CheckHeartBeatRequest.newBuilder().build());
+    int delimiterPos = filepath.indexOf("\\");
+    while (delimiterPos != -1) {
+      String currDir = filepath.substring(0, delimiterPos);
+      System.out.println(currDir);
 
-    System.out.println(reply.toString());
+      delimiterPos = filepath.indexOf("\\", delimiterPos + 1);
+    }
 
-    Thread.sleep(5000);
+    System.out.println(System.getProperty("os.name"));
+    System.out.println(System.getProperty("os.name").toLowerCase().startsWith("windows"));
   }
 }
