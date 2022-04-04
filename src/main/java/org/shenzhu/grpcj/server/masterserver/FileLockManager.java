@@ -43,7 +43,8 @@ public class FileLockManager {
       String currFilePath = filePath.substring(0, delimiterPos);
       Optional<ReentrantReadWriteLock> currLock = this.lockManager.fetchLock(currFilePath);
       if (currLock.isEmpty()) {
-        return false;
+        // Lock does not exist, create new one
+        currLock = Optional.of(this.lockManager.createLock(currFilePath));
       }
 
       currLock.get().readLock().lock();
