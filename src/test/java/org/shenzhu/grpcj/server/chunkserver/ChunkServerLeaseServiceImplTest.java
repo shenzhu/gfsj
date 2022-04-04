@@ -42,6 +42,10 @@ public class ChunkServerLeaseServiceImplTest {
 
   @Before
   public void SetUp() throws Exception {
+    // Generate a unique in-process server name
+    String serverName = InProcessServerBuilder.generateName();
+    String masterServerName = InProcessServerBuilder.generateName();
+
     // Initialize file chunk manager
     FileChunkManager fileChunkManager = FileChunkManager.getInstance();
     fileChunkManager.initialize("ChunkServerLeaseServiceImplTestDB", 1024);
@@ -49,12 +53,13 @@ public class ChunkServerLeaseServiceImplTest {
     fileChunkManager.createChunk(testRevokeLeaseChunkHandlePersist, testFileVersion);
     fileChunkManager.createChunk(testRevokeLeaseChunkHandleRevokable, testFileVersion);
 
-    ChunkServerImpl chunkServer = new ChunkServerImpl(fileChunkManager);
+    ChunkServerImpl chunkServer =
+        new ChunkServerImpl(
+            fileChunkManager,
+            grpcCleanupRule.register(
+                InProcessChannelBuilder.forName(masterServerName).directExecutor().build()));
     chunkServer.addOrUpdateLease(testRevokeLeaseChunkHandlePersist, testExpirationUnixSeconds);
     chunkServer.addOrUpdateLease(testRevokeLeaseChunkHandleRevokable, testExpirationUnixSeconds);
-
-    // Generate a unique in-process server name
-    String serverName = InProcessServerBuilder.generateName();
 
     // Create a server, add service, start, and register for automatic graceful shutdown
     grpcCleanupRule.register(
