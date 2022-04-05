@@ -260,7 +260,7 @@ public class MetadataManager {
    * @return FileChunkMetadata
    */
   public Optional<Metadata.FileChunkMetadata> getFileChunkMetadata(String chunkHandle) {
-    if (this.chunkMetadata.containsKey(chunkHandle)) {
+    if (!this.chunkMetadata.containsKey(chunkHandle)) {
       return Optional.empty();
     }
     return Optional.of(this.chunkMetadata.get(chunkHandle));
