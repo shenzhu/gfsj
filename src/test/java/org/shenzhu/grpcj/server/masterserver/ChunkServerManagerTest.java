@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.shenzhu.grpcj.protos.ChunkServerOuterClass;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -101,7 +102,7 @@ public class ChunkServerManagerTest {
     assertTrue(this.chunkServerManager.registerChunkServer(chunkServer1));
     assertTrue(this.chunkServerManager.registerChunkServer(chunkServer2));
 
-    Set<ChunkServerOuterClass.ChunkServerLocation> allocatedChunkServerLocs =
+    List<ChunkServerOuterClass.ChunkServerLocation> allocatedChunkServerLocs =
         this.chunkServerManager.allocateChunkServer("chunk1", 2);
 
     assertEquals(2, allocatedChunkServerLocs.size());

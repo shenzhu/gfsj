@@ -4,6 +4,7 @@ import org.shenzhu.grpcj.protos.ChunkServerOuterClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -72,17 +73,17 @@ public class ChunkServerManager {
    * @param requestedServerNumber number of chunk servers requested
    * @return allocated chunk servers
    */
-  public Set<ChunkServerOuterClass.ChunkServerLocation> allocateChunkServer(
+  public List<ChunkServerOuterClass.ChunkServerLocation> allocateChunkServer(
       String chunkHandle, int requestedServerNumber) {
     // First check if this chunk handle is already allocated
     if (this.chunkLocationsMap.containsKey(chunkHandle)) {
       logger.info("Chunk servers have already been allocation for chunk {}", chunkHandle);
-      return this.chunkLocationsMap.get(chunkHandle);
+      return new ArrayList<ChunkServerOuterClass.ChunkServerLocation>(
+          this.chunkLocationsMap.get(chunkHandle));
     }
 
     // Use ConcurrentHashMap to create set to make the set thread-safe
-    Set<ChunkServerOuterClass.ChunkServerLocation> chunkServerLocations =
-        ConcurrentHashMap.newKeySet();
+    List<ChunkServerOuterClass.ChunkServerLocation> chunkServerLocations = new LinkedList<>();
 
     // Try to find chunk servers from heap, remember to lock
     this.chunkServerHeapLock.lock();
@@ -117,6 +118,17 @@ public class ChunkServerManager {
     }
     this.chunkServerHeap.addAll(updatedChunkServers);
     this.chunkServerHeapLock.unlock();
+
+    if (allocatedChunkServerCount > 0) {
+      if (!this.chunkLocationsMap.containsKey(chunkHandle)) {
+        this.chunkLocationsMap.put(chunkHandle, ConcurrentHashMap.newKeySet());
+      }
+
+      chunkServerLocations.forEach(
+          loc -> {
+            this.chunkLocationsMap.get(chunkHandle).add(loc);
+          });
+    }
 
     return chunkServerLocations;
   }

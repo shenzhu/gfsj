@@ -39,7 +39,7 @@ service ChunkServerFileService {
   // easy, by sending the data only once.
   //
   // Alternatively, a client can push it the closest replica and let the network
-  // forward the data to other replicas; however, we wont implement this for now
+  // forward thwe data to other replicas; however, we wont implement this for now
   rpc SendChunkData(SendChunkDataRequest) returns (SendChunkDataReply) {}
 
   // Write |length| number of bytes to |chunk_handle| of known version

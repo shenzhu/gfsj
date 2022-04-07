@@ -310,7 +310,7 @@ public class MetadataManager {
    */
   public Optional<Map.Entry<ChunkServerOuterClass.ChunkServerLocation, Long>>
       getPrimaryLeaseMetadata(String chunkHandle) {
-    if (this.leaseHolders.containsKey(chunkHandle)) {
+    if (!this.leaseHolders.containsKey(chunkHandle)) {
       return Optional.empty();
     }
     return Optional.of(this.leaseHolders.get(chunkHandle));
@@ -363,5 +363,14 @@ public class MetadataManager {
    */
   public String allocateNewChunkHandle() {
     return String.valueOf(this.globalChunkId.getAndIncrement());
+  }
+
+  /**
+   * Remove lease for chunk handle.
+   *
+   * @param chunkHandle chunk handle
+   */
+  public void removePrimaryLeaseMetadata(String chunkHandle) {
+    this.leaseHolders.remove(chunkHandle);
   }
 }
