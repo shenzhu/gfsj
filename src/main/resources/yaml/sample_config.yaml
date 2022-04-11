@@ -1,0 +1,23 @@
+version: 1.0
+servers:
+  master_servers:
+    - test_master
+  chunk_servers:
+    - test_chunk_server_01
+network:
+  test_master:
+    hostname: localhost
+    port: 50050
+  test_chunk_server_01:
+    hostname: localhost
+    port: 50051
+  test_chunk_server_02:
+    hostname: localhost
+    port: 50052
+diskSize:
+  block_size_mb: 64
+  min_free_disk_space_mb: 100
+diskLocation: D:\playground\gfsj\disk\
+diskNames:
+  test_chunk_server_01: gfs_db_test_chunk_server_01
+  test_chunk_server_02: gfs_db_test_chunk_server_02

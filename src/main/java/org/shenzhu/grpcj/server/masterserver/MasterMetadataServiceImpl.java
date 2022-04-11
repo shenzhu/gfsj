@@ -327,7 +327,7 @@ public class MasterMetadataServiceImpl
     // Step 1. Access chunk handle
     final String fileName = request.getFilename();
     final int chunkIndex = request.getChunkIndex();
-    logger.info("Handling file chunk write for file {} at {}", request, chunkIndex);
+    logger.info("Handling file chunk write for file {} at {}", request.getFilename(), chunkIndex);
 
     if (!getMetadataManager().existFileMeta(fileName) && !request.getCreateIfNotExists()) {
       logger.error("Cannot find file because it doesn't exist {}", fileName);
@@ -430,6 +430,8 @@ public class MasterMetadataServiceImpl
     }
 
     logger.info("Advanced chunk version for locations: {}", advancedLocations.toString());
+
+    getMetadataManager().advanceChunkVersion(chunkHandle);
 
     // Handle lease
     boolean leaseGranted = false;

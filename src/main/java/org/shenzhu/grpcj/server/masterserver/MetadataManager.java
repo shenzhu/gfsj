@@ -373,4 +373,14 @@ public class MetadataManager {
   public void removePrimaryLeaseMetadata(String chunkHandle) {
     this.leaseHolders.remove(chunkHandle);
   }
+
+  /**
+   * If chunk handle exists.
+   *
+   * @param chunkHandle chunk handle
+   * @return if it exists
+   */
+  public boolean existFileChunkMetadata(String chunkHandle) {
+    return this.chunkMetadata.containsKey(chunkHandle);
+  }
 }

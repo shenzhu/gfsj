@@ -310,4 +310,15 @@ public class ChunkServerManager {
   public Set<ChunkServerOuterClass.ChunkServerLocation> getChunkLocations(String chunkHandle) {
     return this.chunkLocationsMap.get(chunkHandle);
   }
+
+  /**
+   * Get chunkServerMap.
+   *
+   * @return chunk server map
+   */
+  public ConcurrentHashMap<
+          ChunkServerOuterClass.ChunkServerLocation, ChunkServerOuterClass.ChunkServer>
+      getChunkServerMap() {
+    return this.chunkServerMap;
+  }
 }

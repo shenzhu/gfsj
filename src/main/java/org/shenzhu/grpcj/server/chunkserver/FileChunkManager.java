@@ -21,7 +21,7 @@ import java.util.Optional;
 public class FileChunkManager {
   private final Logger logger = LoggerFactory.getLogger(getClass());
 
-  public final String DB_LOCATION = "D:\\playground\\gfsj\\disk";
+  public final String DB_LOCATION = "D:\\playground\\gfsj\\data\\";
 
   // Status for chunk creation
   enum ChunkCreationStatus {
@@ -70,7 +70,10 @@ public class FileChunkManager {
       this.maxChunkSizeInBytes = maxChunkSizeInBytes;
 
     } catch (RocksDBException rocksDBException) {
-      logger.error(String.format("failed to open RocksDB %s", DB_LOCATION + chunkDatabaseName));
+      logger.error(
+          "failed to open RocksDB {}, error: {}",
+          DB_LOCATION + chunkDatabaseName,
+          rocksDBException);
     }
   }
 

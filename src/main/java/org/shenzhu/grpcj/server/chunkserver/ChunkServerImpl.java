@@ -118,7 +118,7 @@ public class ChunkServerImpl {
 
   /** Start reporting to master. */
   public void startReportToMaster() {
-    if (this.reportingThread != null) {
+    if (this.reportingThread == null) {
       this.reportingThread =
           new Thread(
               new Runnable() {
@@ -139,6 +139,7 @@ public class ChunkServerImpl {
                   }
                 }
               });
+      this.reportingThread.start();
     }
   }
 
@@ -175,7 +176,7 @@ public class ChunkServerImpl {
     ChunkServerOuterClass.ChunkServerLocation.Builder chunkServerLocationBuilder =
         ChunkServerOuterClass.ChunkServerLocation.newBuilder();
     chunkServerLocationBuilder.setServerHostname("localhost");
-    chunkServerLocationBuilder.setServerPort(8081);
+    chunkServerLocationBuilder.setServerPort(50051);
     chunkServerBuilder.setLocation(chunkServerLocationBuilder.build());
 
     List<Metadata.FileChunkMetadata> allChunkMetadata =
@@ -183,7 +184,7 @@ public class ChunkServerImpl {
 
     logger.info("Found {} chunks stored to report to master", allChunkMetadata.size());
     for (int i = 0; i < allChunkMetadata.size(); ++i) {
-      chunkServerBuilder.setStoredChunkHandles(i, allChunkMetadata.get(i).getChunkHandle());
+      chunkServerBuilder.addStoredChunkHandles(allChunkMetadata.get(i).getChunkHandle());
     }
 
     // Set ChunkServer and ChunkServerLocation in request

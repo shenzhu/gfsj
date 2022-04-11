@@ -57,4 +57,40 @@ public class ChunkServerFileServiceClient {
 
     return reply;
   }
+
+  public ChunkServerFileServiceOuterClass.SendChunkDataReply sendChunkData(
+      ChunkServerFileServiceOuterClass.SendChunkDataRequest request) {
+    logger.info("Will try sending SendChunkDataRequest to chunk server: {}", request.toString());
+
+    ChunkServerFileServiceOuterClass.SendChunkDataReply reply =
+        this.blockingStub.sendChunkData(request);
+
+    logger.info("Received SendChunkDataReply: {}", reply.toString());
+
+    return reply;
+  }
+
+  public ChunkServerFileServiceOuterClass.WriteFileChunkReply writeFileChunk(
+      ChunkServerFileServiceOuterClass.WriteFileChunkRequest request) {
+    logger.info("Will try sending WriteFileChunkRequest to chunk server: {}", request);
+
+    ChunkServerFileServiceOuterClass.WriteFileChunkReply reply =
+        this.blockingStub.writeFileChunk(request);
+
+    logger.info("Received WriteFileChunkReply: {}", reply);
+
+    return reply;
+  }
+
+  public ChunkServerFileServiceOuterClass.ReadFileChunkReply readFileChunk(
+      ChunkServerFileServiceOuterClass.ReadFileChunkRequest request) {
+    logger.info("Will try sending ReadFileChunkRequest to chunk server: {}", request);
+
+    ChunkServerFileServiceOuterClass.ReadFileChunkReply reply =
+        this.blockingStub.readFileChunk(request);
+
+    logger.info("Received ReadFileChunkReply: {}", reply);
+
+    return reply;
+  }
 }
